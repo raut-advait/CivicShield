@@ -55,6 +55,7 @@ export default function TabLayout() {
           ),
         }}
       />
+<<<<<<< HEAD
       <Tabs.Screen
         name="notifications"
         options={{
@@ -69,6 +70,8 @@ export default function TabLayout() {
           ),
         }}
       />
+=======
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
     </Tabs>
   );
 }

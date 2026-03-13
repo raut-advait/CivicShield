@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useEffect, useRef, useState } from 'react';
+=======
+import React, { useEffect, useRef } from 'react';
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
 import {
   Animated,
   Easing,
@@ -8,7 +12,10 @@ import {
   Share,
   Alert,
   Pressable,
+<<<<<<< HEAD
   Linking,
+=======
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from 'react-native-paper';
@@ -34,6 +41,7 @@ function getVerdictConfig(verdict) {
   return VERDICT_CONFIG.default;
 }
 
+<<<<<<< HEAD
 function getDomain(item) {
   const candidate = item?.source || item?.url || '';
   try {
@@ -73,6 +81,12 @@ export default function ResultScreen() {
   const [visibleGovCount, setVisibleGovCount] = useState(6);
   const [selectedDomain, setSelectedDomain] = useState('all');
   const [govSortMode, setGovSortMode] = useState('score');
+=======
+export default function ResultScreen() {
+  const router = useRouter();
+  const { claim, resultData } = useLocalSearchParams();
+  const contentAnim = useRef(new Animated.Value(0)).current;
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
 
   useEffect(() => {
     Animated.timing(contentAnim, {
@@ -85,11 +99,18 @@ export default function ResultScreen() {
 
   let parsedResult = { verdict: 'No Fact Check Found', results: [] };
   try {
+<<<<<<< HEAD
     if (resultData) parsedResult = JSON.parse(resultData);
+=======
+    if (resultData) {
+      parsedResult = JSON.parse(resultData);
+    }
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
   } catch {
     parsedResult = { verdict: 'Error parsing result', results: [] };
   }
 
+<<<<<<< HEAD
   let parsedGov = { status: 'not_found', results: [] };
   try {
     if (govData) parsedGov = JSON.parse(govData);
@@ -116,6 +137,9 @@ export default function ResultScreen() {
   });
   const visibleGovResults = sortedGovResults.slice(0, visibleGovCount);
   const hasMoreGovResults = sortedGovResults.length > visibleGovCount;
+=======
+  const { verdict, results = [] } = parsedResult;
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
   const verdictConfig = getVerdictConfig(verdict);
 
   const handleShare = async () => {
@@ -125,7 +149,11 @@ export default function ResultScreen() {
         .map((r) => `• ${r.source}: ${r.rating}`)
         .join('\n');
       await Share.share({
+<<<<<<< HEAD
         message: `Civic Signal\n\nInput: "${claim}"\nVerdict: ${verificationClass || verdictConfig.label}\n\nSources:\n${sourceLines || 'No sources found.'}`,
+=======
+        message: `Civic Signal\n\nClaim: "${claim}"\nVerdict: ${verdictConfig.label}\n\nSources:\n${sourceLines || 'No sources found.'}`,
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
       });
     } catch {
       Alert.alert('Share Failed', 'Could not share the result.');
@@ -156,12 +184,18 @@ export default function ResultScreen() {
           <View style={[styles.iconWrap, { backgroundColor: `${verdictConfig.color}18` }]}> 
             <Ionicons name={verdictConfig.icon} size={28} color={verdictConfig.color} />
           </View>
+<<<<<<< HEAD
           <Text style={[styles.verdictLabel, { color: verdictConfig.color }]}>{verificationClass || verdictConfig.label}</Text>
           {verdict && verdict !== verificationClass && verdict !== verdictConfig.label && (
+=======
+          <Text style={[styles.verdictLabel, { color: verdictConfig.color }]}>{verdictConfig.label}</Text>
+          {verdict && verdict !== verdictConfig.label && (
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
             <Text style={styles.verdictRaw}>{verdict}</Text>
           )}
         </View>
 
+<<<<<<< HEAD
         {verificationExplanation ? (
           <View style={styles.verifyCard}>
             <Text style={styles.verifyTitle}>Verification Analysis</Text>
@@ -181,6 +215,8 @@ export default function ResultScreen() {
         ) : null}
 
         {mode !== 'news' && (
+=======
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
         <View style={styles.sourcesSection}>
           <View style={styles.sourcesHeader}>
             <Text style={styles.sourcesTitle}>Sources ({results.length})</Text>
@@ -206,6 +242,7 @@ export default function ResultScreen() {
             ))
           )}
         </View>
+<<<<<<< HEAD
         )}
 
         {govResults.length > 0 && (
@@ -328,6 +365,8 @@ export default function ResultScreen() {
             )}
           </View>
         )}
+=======
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
 
         <View style={styles.disclaimer}>
           <Text style={styles.disclaimerText}>
@@ -396,6 +435,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     textAlign: 'center',
   },
+<<<<<<< HEAD
   verifyCard: {
     backgroundColor: '#F7FBF7',
     borderRadius: 18,
@@ -442,6 +482,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Manrope_500Medium',
     color: '#8F4A31',
   },
+=======
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
   sourcesSection: { marginBottom: 16 },
   sourcesHeader: {
     flexDirection: 'row',
@@ -531,6 +573,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Manrope_700Bold',
     fontSize: 15,
   },
+<<<<<<< HEAD
   govCard: {
     backgroundColor: '#EEF3F5',
     borderRadius: 18,
@@ -719,4 +762,6 @@ const styles = StyleSheet.create({
   sortBtnTextActive: {
     color: '#FFFFFF',
   },
+=======
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
 });

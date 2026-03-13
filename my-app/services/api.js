@@ -2,10 +2,17 @@ import axios from 'axios';
 import { Platform } from 'react-native';
 
 // Set this in app config/env when using a physical device:
+<<<<<<< HEAD
 // EXPO_PUBLIC_API_URL=http://<your-computer-ip>:5002
 const BASE_URL =
   process.env.EXPO_PUBLIC_API_URL ||
   (Platform.OS === 'android' ? 'http://10.0.2.2:5002' : 'http://localhost:5002');
+=======
+// EXPO_PUBLIC_API_URL=http://<your-computer-ip>:5000
+const BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL ||
+  (Platform.OS === 'android' ? 'http://10.0.2.2:5000' : 'http://localhost:5000');
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -37,6 +44,7 @@ export async function verifyClaim(text) {
     }
   }
 }
+<<<<<<< HEAD
 
 /**
  * Verifies a claim against government evidence.
@@ -114,3 +122,5 @@ export async function getNotifications(options = {}) {
 }
 
 export const searchNews = searchClaim;
+=======
+>>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
