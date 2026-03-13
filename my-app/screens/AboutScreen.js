@@ -1,200 +1,225 @@
-import React from 'react';
-import { StyleSheet, View, ScrollView, Linking, Pressable } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Easing, ScrollView, StyleSheet, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Text } from 'react-native-paper';
 
-const FEATURES = [
-  { emoji: '🔍', title: 'AI-Powered Detection', desc: 'Uses Google Fact Check Tools API to scan trusted fact-checking databases worldwide.' },
-  { emoji: '⚡', title: 'Real-Time Results', desc: 'Get instant verdicts on any civic claim, government scheme, or election news.' },
-  { emoji: '📰', title: 'Trusted Sources', desc: 'Results are sourced from verified publishers like Alt News, BOOM, Snopes, and more.' },
-  { emoji: '🔒', title: 'Evidence-Based', desc: 'Every verdict is backed by references so you can read the original fact-check reports.' },
+const PRINCIPLES = [
+  {
+    icon: 'flash-outline',
+    title: 'Fast checks',
+    desc: 'Paste a claim and review fact-check coverage in one pass.',
+  },
+  {
+    icon: 'newspaper-outline',
+    title: 'Traceable sources',
+    desc: 'Open the original article instead of relying on summary text alone.',
+  },
+  {
+    icon: 'shield-checkmark-outline',
+    title: 'Simple verdicts',
+    desc: 'Clear labels make it easier to decide what needs a closer look.',
+  },
 ];
 
 export default function AboutScreen() {
+  const heroAnim = useRef(new Animated.Value(0)).current;
+  const sectionsAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.stagger(100, [
+      Animated.timing(heroAnim, {
+        toValue: 1,
+        duration: 480,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(sectionsAnim, {
+        toValue: 1,
+        duration: 520,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [heroAnim, sectionsAnim]);
+
   return (
     <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
-      {/* App Identity */}
-      <View style={styles.hero}>
-        <View style={styles.shieldBadge}>
-          <Text style={styles.shieldEmoji}>🛡️</Text>
-        </View>
-        <Text style={styles.appName}>CivicShield</Text>
-        <Text style={styles.tagline}>AI Powered Civic Misinformation Shield</Text>
-        <View style={styles.versionBadge}>
-          <Text style={styles.versionText}>v1.0 · Hackathon Edition</Text>
-        </View>
-      </View>
-
-      {/* Description */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>About This App</Text>
-        <Text style={styles.cardText}>
-          CivicShield helps citizens verify civic news related to government schemes,
-          elections, and public information. In an era of rampant misinformation,
-          CivicShield empowers you with evidence-based insights before you share or act on
-          unverified claims.
+      <Animated.View
+        style={[
+          styles.hero,
+          {
+            opacity: heroAnim,
+            transform: [
+              {
+                translateY: heroAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [20, 0],
+                }),
+              },
+            ],
+          },
+        ]}
+      >
+        <Text style={styles.heroEyebrow}>about the product</Text>
+        <Text style={styles.appName}>Civic Signal</Text>
+        <Text style={styles.tagline}>
+          A focused way to review civic claims without extra clutter.
         </Text>
-        <Text style={styles.cardText}>
-          The system checks trusted, independent fact-checking organizations and presents
-          structured, evidence-based results — helping you cut through noise and access truth.
-        </Text>
-      </View>
+      </Animated.View>
 
-      {/* Features */}
-      <Text style={styles.sectionLabel}>KEY FEATURES</Text>
-      {FEATURES.map((f) => (
-        <View key={f.title} style={styles.featureRow}>
-          <Text style={styles.featureEmoji}>{f.emoji}</Text>
-          <View style={styles.featureInfo}>
-            <Text style={styles.featureTitle}>{f.title}</Text>
-            <Text style={styles.featureDesc}>{f.desc}</Text>
+      <Animated.View
+        style={[
+          styles.content,
+          {
+            opacity: sectionsAnim,
+            transform: [
+              {
+                translateY: sectionsAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [24, 0],
+                }),
+              },
+            ],
+          },
+        ]}
+      >
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>What it does</Text>
+          <Text style={styles.cardText}>
+            Civic Signal checks whether a claim already has coverage from trusted fact-check publishers and gives you the source links in a cleaner format.
+          </Text>
+          <Text style={styles.cardText}>
+            It is designed for quick verification before sharing posts, headlines, or public updates.
+          </Text>
+        </View>
+
+        <Text style={styles.sectionLabel}>Core principles</Text>
+        {PRINCIPLES.map((item) => (
+          <View key={item.title} style={styles.featureRow}>
+            <View style={styles.iconWrap}>
+              <Ionicons name={item.icon} size={18} color="#16384C" />
+            </View>
+            <View style={styles.featureInfo}>
+              <Text style={styles.featureTitle}>{item.title}</Text>
+              <Text style={styles.featureDesc}>{item.desc}</Text>
+            </View>
+          </View>
+        ))}
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>What powers it</Text>
+          <View style={styles.techGrid}>
+            {['Expo', 'React Native', 'Node.js', 'Google Fact Check API', 'Axios'].map((item) => (
+              <View key={item} style={styles.techChip}>
+                <Text style={styles.techChipText}>{item}</Text>
+              </View>
+            ))}
           </View>
         </View>
-      ))}
 
-      {/* Technology */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Technology Stack</Text>
-        <View style={styles.techGrid}>
-          {['React Native', 'Expo', 'Node.js', 'Google Fact Check API', 'React Navigation', 'Axios'].map((t) => (
-            <View key={t} style={styles.techChip}>
-              <Text style={styles.techChipText}>{t}</Text>
-            </View>
-          ))}
+        <View style={styles.noteCard}>
+          <Text style={styles.noteTitle}>Use it as a starting point</Text>
+          <Text style={styles.noteText}>
+            Not every claim is already reviewed. When no source appears, treat that as a cue to verify more broadly rather than a final answer.
+          </Text>
         </View>
-      </View>
-
-      {/* Disclaimer */}
-      <View style={styles.disclaimerCard}>
-        <Text style={styles.disclaimerTitle}>⚠️  Important Notice</Text>
-        <Text style={styles.disclaimerText}>
-          CivicShield cannot guarantee 100% accuracy. The system relies on existing
-          fact-check databases and may not have reviewed every claim. We strongly
-          encourage users to verify information from multiple trusted sources and
-          exercise independent judgment.
-        </Text>
-      </View>
-
-      {/* Built For */}
-      <View style={styles.footerCard}>
-        <Text style={styles.footerEmoji}>🏆</Text>
-        <Text style={styles.footerText}>Built for Hackathon 2026</Text>
-        <Text style={styles.footerSub}>Promoting digital literacy &amp; civic awareness</Text>
-      </View>
+      </Animated.View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: '#F3F4F6' },
-  container: { padding: 20, paddingBottom: 40 },
+  scroll: { flex: 1, backgroundColor: '#F4F1EA' },
+  container: { padding: 20, paddingBottom: 118 },
   hero: {
-    alignItems: 'center',
-    paddingVertical: 28,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    padding: 24,
+    backgroundColor: '#E8ECE5',
+    borderRadius: 28,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.07,
-    shadowRadius: 10,
-    elevation: 4,
   },
-  shieldBadge: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#EFF6FF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-    borderWidth: 2,
-    borderColor: '#BFDBFE',
+  heroEyebrow: {
+    fontSize: 11,
+    fontFamily: 'Manrope_700Bold',
+    color: '#6E766D',
+    letterSpacing: 1.4,
+    textTransform: 'uppercase',
+    marginBottom: 10,
   },
-  shieldEmoji: { fontSize: 40 },
   appName: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#1E3A8A',
-    letterSpacing: 0.5,
+    fontSize: 32,
+    lineHeight: 36,
+    fontFamily: 'Manrope_800ExtraBold',
+    color: '#16384C',
+    letterSpacing: -0.8,
   },
   tagline: {
-    fontSize: 13,
-    color: '#6B7280',
-    marginTop: 4,
-    textAlign: 'center',
-    paddingHorizontal: 20,
+    fontSize: 14,
+    lineHeight: 21,
+    fontFamily: 'Manrope_500Medium',
+    color: '#4E5C65',
+    marginTop: 10,
+    maxWidth: '90%',
   },
-  versionBadge: {
-    marginTop: 12,
-    backgroundColor: '#FEF3C7',
-    paddingHorizontal: 14,
-    paddingVertical: 5,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#FDE68A',
-  },
-  versionText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#92400E',
+  content: {
+    gap: 14,
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 18,
-    marginBottom: 16,
+    borderRadius: 24,
+    padding: 20,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 2,
+    borderColor: '#E3E6DE',
   },
   cardTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#111827',
+    fontSize: 18,
+    fontFamily: 'Manrope_800ExtraBold',
+    color: '#10212B',
     marginBottom: 10,
   },
   cardText: {
-    fontSize: 13,
-    color: '#6B7280',
-    lineHeight: 20,
+    fontSize: 14,
+    fontFamily: 'Manrope_500Medium',
+    color: '#4E5C65',
+    lineHeight: 21,
     marginBottom: 8,
   },
   sectionLabel: {
     fontSize: 11,
-    fontWeight: '700',
-    color: '#9CA3AF',
+    fontFamily: 'Manrope_700Bold',
+    color: '#8B9387',
     letterSpacing: 1.2,
-    marginBottom: 12,
+    marginTop: 2,
   },
   featureRow: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 14,
-    marginBottom: 10,
+    borderRadius: 20,
+    padding: 16,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: '#E3E6DE',
     alignItems: 'flex-start',
     gap: 14,
   },
-  featureEmoji: { fontSize: 24 },
+  iconWrap: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#F4F1EA',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   featureInfo: { flex: 1 },
   featureTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontSize: 15,
+    fontFamily: 'Manrope_700Bold',
+    color: '#10212B',
     marginBottom: 4,
   },
   featureDesc: {
     fontSize: 13,
-    color: '#6B7280',
-    lineHeight: 19,
+    fontFamily: 'Manrope_500Medium',
+    color: '#66707A',
+    lineHeight: 20,
   },
   techGrid: {
     flexDirection: 'row',
@@ -202,53 +227,35 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   techChip: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: '#F5F6F2',
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
+    paddingVertical: 7,
+    borderRadius: 999,
     borderWidth: 1,
-    borderColor: '#BFDBFE',
+    borderColor: '#E3E6DE',
   },
   techChipText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#1D4ED8',
+    fontFamily: 'Manrope_600SemiBold',
+    color: '#16384C',
   },
-  disclaimerCard: {
-    backgroundColor: '#FFFBEB',
-    borderRadius: 14,
+  noteCard: {
+    backgroundColor: '#FFF4EF',
+    borderRadius: 20,
     padding: 16,
-    marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: '#F0D4C8',
   },
-  disclaimerTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#92400E',
+  noteTitle: {
+    fontSize: 15,
+    fontFamily: 'Manrope_700Bold',
+    color: '#8F4A31',
     marginBottom: 8,
   },
-  disclaimerText: {
+  noteText: {
     fontSize: 13,
-    color: '#92400E',
+    fontFamily: 'Manrope_500Medium',
+    color: '#8F4A31',
     lineHeight: 20,
-  },
-  footerCard: {
-    backgroundColor: '#1E3A8A',
-    borderRadius: 16,
-    padding: 20,
-    alignItems: 'center',
-  },
-  footerEmoji: { fontSize: 32, marginBottom: 8 },
-  footerText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 4,
-  },
-  footerSub: {
-    fontSize: 12,
-    color: '#93C5FD',
-    textAlign: 'center',
   },
 });

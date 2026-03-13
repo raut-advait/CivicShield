@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Pressable, Linking, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Text } from 'react-native-paper';
 
 /**
@@ -31,7 +32,7 @@ export default function SourceCard({ item }) {
     <View style={styles.card}>
       <View style={styles.header}>
         <Text style={styles.sourceName} numberOfLines={1}>{source || 'Unknown Source'}</Text>
-        <View style={[styles.badge, { backgroundColor: ratingColor + '20' }]}>
+        <View style={[styles.badge, { backgroundColor: ratingColor + '16' }]}>
           <Text style={[styles.badgeText, { color: ratingColor }]}>{rating || 'N/A'}</Text>
         </View>
       </View>
@@ -39,7 +40,8 @@ export default function SourceCard({ item }) {
         <Text style={styles.claimText} numberOfLines={3}>{claim}</Text>
       ) : null}
       <Pressable style={styles.button} onPress={handleOpenSource} android_ripple={{ color: '#1D4ED820' }}>
-        <Text style={styles.buttonText}>🔗  Read Source</Text>
+        <Ionicons name="arrow-forward" size={16} color="#16384C" />
+        <Text style={styles.buttonText}>Open source</Text>
       </Pressable>
     </View>
   );
@@ -57,58 +59,62 @@ function getRatingColor(rating) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 16,
+    borderRadius: 20,
+    padding: 18,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    elevation: 3,
+    borderColor: '#E3E6DE',
+    shadowColor: '#16384C',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.05,
+    shadowRadius: 16,
+    elevation: 4,
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   sourceName: {
     fontSize: 15,
-    fontWeight: '700',
-    color: '#1F2937',
+    fontFamily: 'Manrope_700Bold',
+    color: '#10212B',
     flex: 1,
-    marginRight: 8,
+    marginRight: 10,
   },
   badge: {
     paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 20,
+    paddingVertical: 5,
+    borderRadius: 999,
   },
   badgeText: {
-    fontSize: 12,
-    fontWeight: '700',
+    fontSize: 11,
+    fontFamily: 'Manrope_700Bold',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   claimText: {
     fontSize: 13,
-    color: '#6B7280',
-    lineHeight: 19,
-    marginBottom: 12,
+    fontFamily: 'Manrope_500Medium',
+    color: '#66707A',
+    lineHeight: 20,
+    marginBottom: 14,
   },
   button: {
-    backgroundColor: '#EFF6FF',
-    borderRadius: 8,
-    paddingVertical: 10,
+    backgroundColor: '#F5F6F2',
+    borderRadius: 14,
+    paddingVertical: 12,
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
     borderWidth: 1,
-    borderColor: '#BFDBFE',
+    borderColor: '#E3E6DE',
   },
   buttonText: {
-    color: '#2563EB',
-    fontWeight: '600',
+    color: '#16384C',
+    fontFamily: 'Manrope_700Bold',
     fontSize: 14,
   },
 });
