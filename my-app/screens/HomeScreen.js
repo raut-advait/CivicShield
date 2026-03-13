@@ -15,11 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text, ActivityIndicator } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import ClaimInput from '../components/ClaimInput';
-<<<<<<< HEAD
 import { verifyInformation, searchNews } from '../services/api';
-=======
-import { verifyClaim } from '../services/api';
->>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -76,7 +72,6 @@ export default function HomeScreen() {
 
     setLoading(true);
     try {
-<<<<<<< HEAD
       const [verifyResult, govResult] = await Promise.allSettled([
         verifyInformation(claimText.trim()),
         searchNews(claimText.trim()),
@@ -88,15 +83,11 @@ export default function HomeScreen() {
 
       const govData = govResult.status === 'fulfilled' ? govResult.value : { status: 'not_found', results: [] };
 
-=======
-      const result = await verifyClaim(claimText.trim());
->>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
       router.push({
         pathname: '/result',
         params: {
           claim: claimText.trim(),
           resultData: JSON.stringify(result),
-<<<<<<< HEAD
           govData: JSON.stringify(govData),
           mode: 'verify',
         },
@@ -128,16 +119,6 @@ export default function HomeScreen() {
       });
     } catch (error) {
       Alert.alert('Error', error.message || 'Something went wrong. Please try again.', [{ text: 'OK', style: 'default' }]);
-=======
-        },
-      });
-    } catch (error) {
-      Alert.alert(
-        'Error',
-        error.message || 'Something went wrong. Please try again.',
-        [{ text: 'OK', style: 'default' }]
-      );
->>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
     } finally {
       setLoading(false);
     }
@@ -211,13 +192,8 @@ export default function HomeScreen() {
         >
           <View style={styles.cardHeader}>
             <View>
-<<<<<<< HEAD
               <Text style={styles.cardTitle}>Verify or search information</Text>
               <Text style={styles.cardSubtitle}>Check claim truth status or search related government records.</Text>
-=======
-              <Text style={styles.cardTitle}>Run a verification</Text>
-              <Text style={styles.cardSubtitle}>Send one claim at a time for the cleanest result.</Text>
->>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
             </View>
             <View style={styles.cardBadge}>
               <Ionicons name="sparkles-outline" size={16} color="#16384C" />
@@ -244,7 +220,6 @@ export default function HomeScreen() {
           {loading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#16384C" />
-<<<<<<< HEAD
               <Text style={styles.loadingText}>Processing your request...</Text>
             </View>
           ) : (
@@ -271,23 +246,6 @@ export default function HomeScreen() {
                 <Text style={styles.searchButtonText}>Search News</Text>
               </Pressable>
             </View>
-=======
-              <Text style={styles.loadingText}>Checking sources…</Text>
-            </View>
-          ) : (
-            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-              <Pressable
-                style={styles.verifyButton}
-                onPress={handleVerify}
-                onPressIn={handlePressIn}
-                onPressOut={handlePressOut}
-                android_ripple={{ color: '#ffffff30' }}
-              >
-                <Ionicons name="scan-outline" size={18} color="#FFFFFF" />
-                <Text style={styles.verifyButtonText}>Verify now</Text>
-              </Pressable>
-            </Animated.View>
->>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
           )}
         </Animated.View>
 
@@ -309,15 +267,9 @@ export default function HomeScreen() {
         >
           <Text style={styles.howTitle}>Three quick steps</Text>
           {[
-<<<<<<< HEAD
             'Paste a claim or keyword topic (example: pm kisan update).',
             'Verify mode classifies it as True, False, or Partially True.',
             'Search mode lists related records with source and page links.',
-=======
-            'Paste a claim, headline, or public announcement.',
-            'We check available fact-check coverage from trusted sources.',
-            'You get a verdict and links to review the evidence.',
->>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
           ].map((step, index) => (
             <View key={step} style={styles.step}>
               <View style={styles.stepNumWrap}>
@@ -495,7 +447,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Manrope_700Bold',
   },
-<<<<<<< HEAD
   primaryActionStack: {
     gap: 10,
   },
@@ -515,8 +466,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Manrope_700Bold',
   },
-=======
->>>>>>> df25e1a6955fbefedb2bb9ab9ffd30f182cb055a
   loadingContainer: {
     alignItems: 'center',
     paddingVertical: 20,
