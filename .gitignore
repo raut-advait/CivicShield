@@ -1,0 +1,11 @@
+**/node_modules/
+**/.expo/
+**/.vscode/
+**/dist/
+**/web-build/
+**/.git.backup/
+**/.env
+**/.env.*
+!**/.env.example
+.DS_Store
+Thumbs.db
