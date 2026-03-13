@@ -90,8 +90,8 @@ app.post('/factcheck', async (req, res) => {
 });
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n🛡️  CivicShield Backend running at http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`\n🛡️  CivicShield Backend running at http://0.0.0.0:${PORT}`);
   console.log(`   POST http://localhost:${PORT}/factcheck\n`);
 
   if (!GOOGLE_API_KEY || GOOGLE_API_KEY === 'YOUR_GOOGLE_API_KEY_HERE') {

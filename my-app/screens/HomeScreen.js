@@ -1,16 +1,17 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   View,
   ScrollView,
   Alert,
   Animated,
+  Easing,
   Pressable,
-  Share,
   Clipboard,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Text, ActivityIndicator } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import ClaimInput from '../components/ClaimInput';
@@ -21,6 +22,32 @@ export default function HomeScreen() {
   const [claimText, setClaimText] = useState('');
   const [loading, setLoading] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const heroAnim = useRef(new Animated.Value(0)).current;
+  const cardAnim = useRef(new Animated.Value(0)).current;
+  const stepsAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.stagger(90, [
+      Animated.timing(heroAnim, {
+        toValue: 1,
+        duration: 500,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(cardAnim, {
+        toValue: 1,
+        duration: 520,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(stepsAnim, {
+        toValue: 1,
+        duration: 520,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [cardAnim, heroAnim, stepsAnim]);
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
@@ -83,48 +110,84 @@ export default function HomeScreen() {
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Hero Header */}
-        <View style={styles.hero}>
-          <View style={styles.shieldBadge}>
-            <Text style={styles.shieldEmoji}>🛡️</Text>
-          </View>
-          <Text style={styles.heroTitle}>CivicShield</Text>
+        <Animated.View
+          style={[
+            styles.hero,
+            {
+              opacity: heroAnim,
+              transform: [
+                {
+                  translateY: heroAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [22, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
+          <View style={styles.heroGlow} />
+          <Text style={styles.heroEyebrow}>fact-check assistant</Text>
+          <Text style={styles.heroTitle}>Civic Signal</Text>
           <Text style={styles.heroSubtitle}>
-            AI-Powered Civic Misinformation Detector
+            Clean verification for public claims, scheme updates, and election headlines.
           </Text>
-        </View>
+          <View style={styles.chipsRow}>
+            {['Public claims', 'Election news', 'Scheme updates'].map((chip) => (
+              <View key={chip} style={styles.chip}>
+                <Text style={styles.chipText}>{chip}</Text>
+              </View>
+            ))}
+          </View>
+        </Animated.View>
 
-        {/* Info Chips */}
-        <View style={styles.chipsRow}>
-          {['Elections', 'Schemes', 'Announcements'].map((chip) => (
-            <View key={chip} style={styles.chip}>
-              <Text style={styles.chipText}>{chip}</Text>
+        <Animated.View
+          style={[
+            styles.card,
+            {
+              opacity: cardAnim,
+              transform: [
+                {
+                  translateY: cardAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [24, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
+          <View style={styles.cardHeader}>
+            <View>
+              <Text style={styles.cardTitle}>Run a verification</Text>
+              <Text style={styles.cardSubtitle}>Send one claim at a time for the cleanest result.</Text>
             </View>
-          ))}
-        </View>
+            <View style={styles.cardBadge}>
+              <Ionicons name="sparkles-outline" size={16} color="#16384C" />
+            </View>
+          </View>
 
-        {/* Input Card */}
-        <View style={styles.card}>
           <ClaimInput
             value={claimText}
             onChangeText={setClaimText}
             editable={!loading}
           />
 
-          {/* Action Row */}
           <View style={styles.actionRow}>
             <Pressable style={styles.copyBtn} onPress={handleCopy} disabled={loading}>
-              <Text style={styles.copyBtnText}>📋 Copy</Text>
+              <Ionicons name="copy-outline" size={16} color="#16384C" />
+              <Text style={styles.copyBtnText}>Copy</Text>
             </Pressable>
             <Pressable style={styles.clearBtn} onPress={() => setClaimText('')} disabled={loading}>
-              <Text style={styles.clearBtnText}>✕ Clear</Text>
+              <Ionicons name="close-outline" size={16} color="#8F4A31" />
+              <Text style={styles.clearBtnText}>Clear</Text>
             </Pressable>
           </View>
 
           {loading ? (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#2563EB" />
-              <Text style={styles.loadingText}>Checking facts…</Text>
+              <ActivityIndicator size="large" color="#16384C" />
+              <Text style={styles.loadingText}>Checking sources…</Text>
             </View>
           ) : (
             <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
@@ -135,95 +198,152 @@ export default function HomeScreen() {
                 onPressOut={handlePressOut}
                 android_ripple={{ color: '#ffffff30' }}
               >
-                <Text style={styles.verifyButtonText}>🔍  Verify Claim</Text>
+                <Ionicons name="scan-outline" size={18} color="#FFFFFF" />
+                <Text style={styles.verifyButtonText}>Verify now</Text>
               </Pressable>
             </Animated.View>
           )}
-        </View>
+        </Animated.View>
 
-        {/* How it Works */}
-        <View style={styles.howCard}>
-          <Text style={styles.howTitle}>How It Works</Text>
-          <View style={styles.step}>
-            <Text style={styles.stepNum}>1</Text>
-            <Text style={styles.stepText}>Paste or type a civic claim or news headline</Text>
-          </View>
-          <View style={styles.step}>
-            <Text style={styles.stepNum}>2</Text>
-            <Text style={styles.stepText}>CivicShield checks trusted fact-checking databases</Text>
-          </View>
-          <View style={styles.step}>
-            <Text style={styles.stepNum}>3</Text>
-            <Text style={styles.stepText}>Get an evidence-based verdict with sources</Text>
-          </View>
-        </View>
+        <Animated.View
+          style={[
+            styles.howCard,
+            {
+              opacity: stepsAnim,
+              transform: [
+                {
+                  translateY: stepsAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [24, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
+          <Text style={styles.howTitle}>Three quick steps</Text>
+          {[
+            'Paste a claim, headline, or public announcement.',
+            'We check available fact-check coverage from trusted sources.',
+            'You get a verdict and links to review the evidence.',
+          ].map((step, index) => (
+            <View key={step} style={styles.step}>
+              <View style={styles.stepNumWrap}>
+                <Text style={styles.stepNum}>{index + 1}</Text>
+              </View>
+              <Text style={styles.stepText}>{step}</Text>
+            </View>
+          ))}
+        </Animated.View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: '#F3F4F6' },
+  flex: { flex: 1, backgroundColor: '#F4F1EA' },
   scroll: { flex: 1 },
   container: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 118,
   },
   hero: {
-    alignItems: 'center',
-    paddingVertical: 28,
+    position: 'relative',
+    overflow: 'hidden',
+    padding: 24,
+    borderRadius: 28,
+    backgroundColor: '#E8ECE5',
+    marginBottom: 16,
   },
-  shieldBadge: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: '#EFF6FF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-    borderWidth: 2,
-    borderColor: '#BFDBFE',
+  heroGlow: {
+    position: 'absolute',
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    backgroundColor: '#D9775730',
+    top: -48,
+    right: -20,
   },
-  shieldEmoji: { fontSize: 36 },
+  heroEyebrow: {
+    fontSize: 11,
+    fontFamily: 'Manrope_700Bold',
+    color: '#6E766D',
+    letterSpacing: 1.5,
+    textTransform: 'uppercase',
+    marginBottom: 8,
+  },
   heroTitle: {
-    fontSize: 30,
-    fontWeight: '800',
-    color: '#1E3A8A',
-    letterSpacing: 0.5,
+    fontSize: 34,
+    lineHeight: 38,
+    fontFamily: 'Manrope_800ExtraBold',
+    color: '#16384C',
+    letterSpacing: -0.8,
   },
   heroSubtitle: {
-    fontSize: 13,
-    color: '#6B7280',
-    marginTop: 4,
-    textAlign: 'center',
+    maxWidth: '88%',
+    fontSize: 14,
+    lineHeight: 21,
+    fontFamily: 'Manrope_500Medium',
+    color: '#4E5C65',
+    marginTop: 10,
   },
   chipsRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    flexWrap: 'wrap',
     gap: 8,
-    marginBottom: 20,
+    marginTop: 18,
   },
   chip: {
-    backgroundColor: '#DBEAFE',
+    backgroundColor: '#FFFFFFD8',
     paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 20,
+    paddingVertical: 7,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: '#E0E5DC',
   },
   chipText: {
-    color: '#1D4ED8',
+    color: '#16384C',
     fontSize: 12,
-    fontWeight: '600',
+    fontFamily: 'Manrope_600SemiBold',
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    borderRadius: 28,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
+    shadowColor: '#16384C',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.06,
+    shadowRadius: 20,
     elevation: 5,
     marginBottom: 16,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginBottom: 18,
+  },
+  cardTitle: {
+    fontSize: 20,
+    lineHeight: 24,
+    fontFamily: 'Manrope_800ExtraBold',
+    color: '#10212B',
+  },
+  cardSubtitle: {
+    marginTop: 6,
+    maxWidth: 230,
+    fontSize: 13,
+    lineHeight: 19,
+    fontFamily: 'Manrope_500Medium',
+    color: '#6E766D',
+  },
+  cardBadge: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#F4F1EA',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   actionRow: {
     flexDirection: 'row',
@@ -232,40 +352,56 @@ const styles = StyleSheet.create({
   },
   copyBtn: {
     flex: 1,
-    paddingVertical: 9,
-    borderRadius: 8,
-    backgroundColor: '#F3F4F6',
+    paddingVertical: 11,
+    borderRadius: 14,
+    backgroundColor: '#F5F6F2',
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: '#E3E6DE',
   },
-  copyBtnText: { color: '#374151', fontSize: 13, fontWeight: '600' },
+  copyBtnText: {
+    color: '#16384C',
+    fontSize: 13,
+    fontFamily: 'Manrope_700Bold',
+  },
   clearBtn: {
     flex: 1,
-    paddingVertical: 9,
-    borderRadius: 8,
-    backgroundColor: '#FEF2F2',
+    paddingVertical: 11,
+    borderRadius: 14,
+    backgroundColor: '#FFF4EF',
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
     borderWidth: 1,
-    borderColor: '#FECACA',
+    borderColor: '#F3D4C7',
   },
-  clearBtnText: { color: '#DC2626', fontSize: 13, fontWeight: '600' },
+  clearBtnText: {
+    color: '#8F4A31',
+    fontSize: 13,
+    fontFamily: 'Manrope_700Bold',
+  },
   verifyButton: {
-    backgroundColor: '#2563EB',
-    borderRadius: 12,
+    backgroundColor: '#16384C',
+    borderRadius: 18,
     paddingVertical: 16,
     alignItems: 'center',
-    shadowColor: '#2563EB',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    shadowColor: '#16384C',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
     elevation: 6,
   },
   verifyButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    fontFamily: 'Manrope_700Bold',
   },
   loadingContainer: {
     alignItems: 'center',
@@ -273,46 +409,49 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   loadingText: {
-    color: '#2563EB',
+    color: '#16384C',
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily: 'Manrope_700Bold',
   },
   howCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 18,
+    borderRadius: 24,
+    padding: 20,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: '#E3E6DE',
   },
   howTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#374151',
-    marginBottom: 12,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
+    fontSize: 18,
+    fontFamily: 'Manrope_800ExtraBold',
+    color: '#10212B',
+    marginBottom: 14,
   },
   step: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 10,
+    marginBottom: 14,
     gap: 12,
   },
+  stepNumWrap: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#E8ECE5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   stepNum: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#2563EB',
-    color: '#FFFFFF',
+    color: '#16384C',
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 18,
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: 'Manrope_800ExtraBold',
   },
   stepText: {
     flex: 1,
-    fontSize: 13,
-    color: '#6B7280',
+    fontSize: 14,
+    fontFamily: 'Manrope_500Medium',
+    color: '#4E5C65',
     lineHeight: 20,
   },
 });
